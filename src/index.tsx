@@ -1,12 +1,22 @@
 import React from 'react';
 import ReactDOM from 'react-dom';
+import { SWRConfig } from 'swr';
+import { AxiosError } from 'axios';
 import './index.css';
 import App from './App';
 import reportWebVitals from './reportWebVitals';
 
 ReactDOM.render(
   <React.StrictMode>
-    <App />
+    <SWRConfig
+      value={{
+        onError: (error: AxiosError) => {
+          console.error(error.message);
+        },
+      }}
+    >
+      <App />
+    </SWRConfig>
   </React.StrictMode>,
   document.getElementById('root')
 );

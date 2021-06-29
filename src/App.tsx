@@ -1,24 +1,58 @@
-import React from 'react';
-import logo from './logo.svg';
-import './App.css';
+import React, { useState } from 'react';
+import useSWR from 'swr';
+import { Dropdown, Spinner } from 'react-bootstrap';
+import { getPokemonList, getPokemonData } from './api/endpoints';
+import { GetPokemonListResponse, getPokemonResponse } from './api/responses';
+import fetcher from './utils/fetcher';
+import './App.scss';
 
-function App() {
+const App = () => {
+  const [selectedPokemon, setSelectedPokemon] = useState<{ name: string; url: string; }>();
+
+  const { data: pokemonList } = useSWR<GetPokemonListResponse>(
+    getPokemonList,
+    (key: string) => fetcher<GetPokemonListResponse>(key),
+  );
+  const { data: pokemonData } = useSWR<getPokemonResponse>(
+    selectedPokemon ? getPokemonData(selectedPokemon.name) : null,
+    (key: string) => fetcher<getPokemonResponse>(key),
+  );
+
+  console.log(pokemonList);
+
   return (
     <div className="App">
-      <header className="App-header">
-        <img src={logo} className="App-logo" alt="logo" />
-        <p>
-          Edit <code>src/App.tsx</code> and save to reload.
-        </p>
-        <a
-          className="App-link"
-          href="https://reactjs.org"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          Learn React
-        </a>
-      </header>
+      {
+        pokemonList ? (
+          <>
+            <Dropdown>
+              <Dropdown.Toggle variant="success" id="dropdown-basic">
+                { selectedPokemon?.name || 'Select a Pokemon' }
+              </Dropdown.Toggle>
+
+              <Dropdown.Menu>
+                {
+                  pokemonList.results.map((pokemon) => (
+                    <Dropdown.Item onClick={() => setSelectedPokemon(pokemon)} data-testid="pokemon-option" key={pokemon.name}>
+                      {pokemon.name}
+                    </Dropdown.Item>
+                  ))
+                }
+              </Dropdown.Menu>
+            </Dropdown>
+
+            {
+              (selectedPokemon && pokemonData) && (
+                <>
+                  <img src={pokemonData.sprites.front_default} alt={selectedPokemon.name} />
+                </>
+              )
+            }
+          </>
+        ) : (
+          <Spinner animation="border" variant="primary" data-testid="loading-spinner" />
+        )
+      }
     </div>
   );
 }
