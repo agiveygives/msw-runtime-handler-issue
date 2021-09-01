@@ -3,14 +3,14 @@
 // expect(element).toHaveTextContent(/react/i)
 // learn more: https://github.com/testing-library/jest-dom
 import '@testing-library/jest-dom';
-import { cache } from "swr";
+// import { cache } from "swr";
 import server from './__mocks__/msw/server';
 
 // Enable API mocking before tests.
 beforeAll(() => server.listen());
 
 // Clear any swr cached data
-beforeEach(() => cache.clear());
+// beforeEach(() => cache.clear());
 
 // Reset any runtime request handlers we may add during the tests.
 afterEach(() => server.resetHandlers());

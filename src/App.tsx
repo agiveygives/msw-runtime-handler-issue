@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useEffect, useState } from 'react';
 import useSWR from 'swr';
 import { Dropdown, Spinner } from 'react-bootstrap';
 import { getPokemonList, getPokemonData } from './api/endpoints';
@@ -17,6 +17,23 @@ const App = () => {
     selectedPokemon ? getPokemonData(selectedPokemon.name) : null,
     (key: string) => fetcher<getPokemonResponse>(key),
   );
+
+  // const [pokemonList, setPokemonList] = useState<GetPokemonListResponse>();
+  // const [pokemonData, setPokemonData] = useState<getPokemonResponse>();
+
+  // useEffect(() => {
+  //   fetch(getPokemonList)
+  //     .then((res) => res.json() as Promise<GetPokemonListResponse>)
+  //     .then((data) => setPokemonList(data));
+  // }, [])
+
+  // useEffect(() => {
+  //   if (selectedPokemon) {
+  //     fetch(getPokemonData(selectedPokemon.name))
+  //       .then((res) => res.json() as Promise<getPokemonResponse>)
+  //       .then((data) => setPokemonData(data));
+  //   }
+  // }, [selectedPokemon])
 
   console.log(pokemonList);
 

@@ -9,6 +9,7 @@ interface Props {
 const TestWrapper: FC<Props> = ({ children }: Props) => (
   <SWRConfig
     value={{
+      provider: () => new Map(),
       dedupingInterval: 0,
       onError: (error: AxiosError) => {
         console.error(error.message);
